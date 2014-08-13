@@ -5,7 +5,7 @@ module BraintreeRails
       [:customer_id, :presence => true, :length => {:maximum => 36}, :on => :create],
       [:number, :presence => true, :allow_blank => false, :if => :new_record?],
       [:number, :numericality => {:only_integer => true}, :length => {:minimum => 12, :maximum => 19}, 'braintree_rails/luhn_10' => true, :if => Proc.new { Configuration.mode == Configuration::Mode::S2S }],
-      [:cvv, :presence => true, :allow_blank => false, :if => Proc.new { Configuration.require_cvv  }],
+      [:cvv, :presence => true, :allow_blank => false, :if => Proc.new { |m| m.new_record? && Configuration.require_cvv  }],
       [:cvv, :numericality => {:only_integer => true}, :length => {:minimum => 3, :maximum => 4}, :if => Proc.new { Configuration.require_cvv && Configuration.mode == Configuration::Mode::S2S }],
       [:expiration_month, :presence => true, :if => Proc.new { |credit_card| credit_card.new_record? && credit_card.expiration_date.blank? }],
       [:expiration_year, :presence => true, :if => Proc.new { |credit_card| credit_card.new_record? && credit_card.expiration_date.blank? }],
